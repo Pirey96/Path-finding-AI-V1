@@ -1,0 +1,439 @@
+#---------------------------------------------------------------------
+#Assignment 1
+#Written by Kandavanam Pireyatharsan - 40031844
+#For COMP 472 Section (ABKX (4907) – Summer 2020
+#--------------------------------------------------------------------
+
+import warnings
+import geopandas as gpd
+import matplotlib.pyplot as plot
+from matplotlib import colors
+import numpy as np
+from shapely.geometry import Polygon, Point
+import math
+from matplotlib.pyplot import draw
+
+
+accessible_coords = []
+data_frame = gpd.read_file('crime_dt.shp')
+geo = gpd.read_file('crime_dt.shp')
+warnings.filterwarnings('ignore')
+print(data_frame.shape)
+data_frame = data_frame["geometry"]
+#data_frame["wkt"] = data_frame.geometry.apply(lambda g: g.wkt)
+gridsize = float(input("Input grid size: "))
+open_set = []
+closed_set = []
+#print(data_frame.head(20000))
+all_points = []
+
+
+def polygon_grid(data_frame):
+    xmin, ymin, xmax, ymax = geo.total_bounds
+    rows = int(np.floor(0.04 / gridsize))                                                          #creates coordinates for gris polygons
+    Xl = xmin
+    Xr = xmin + gridsize
+    Yt = ymin
+    Yb = ymin + gridsize
+    polygons = []
+    for i in range(rows):
+        Xleft = Xl
+        Xright = Xr
+
+        for j in range(rows):
+            polygons.append(
+                Polygon([(Xleft, Yb), (Xright, Yb), (Xright, Yt), (Xleft, Yt)]))
+            Xleft = Xleft + gridsize
+            Xright = Xright + gridsize
+        Yt = Yt + gridsize
+        Yb = Yb + gridsize
+    grid = gpd.GeoDataFrame({'geometry': polygons})
+
+    #print(grid.head(20000))
+    plotter(grid)
+
+def number_of_crimes_per_grid(grid):                                                                          #this function has the longest runtime out of everything in this program
+   crime = data_frame.copy()
+   crime = crime.to_frame()                                                                                       #iterates theough polygons and checks if point data is within the polygon grids that were
+   array_of_crime = []                                                                                               #drawn by the pervious function
+
+   for i in range (math.floor((0.04/gridsize))*math.floor((0.04/gridsize))):
+       array_of_crime.append(0)
+   print(str(len(array_of_crime)))
+   for i, point in crime.iterrows():
+
+       for j, polygon in grid.iterrows():
+           array_of_crime[j]
+           if polygon.geometry.is_empty:
+               break
+           if polygon.geometry.contains (point.geometry):
+               array_of_crime[j]=array_of_crime[j]+1
+               break
+   grid ['crime'] = gpd.GeoSeries(array_of_crime)
+   #print(grid.head(2000))
+   grid.to_csv('0.002.csv')
+
+   #stats(grid)
+
+
+colors = []
+
+
+def stats(grid):                                                                                    #calculates threashold which is used in the choice of color for the grids
+    threshold = int(input("Threashold value: "))
+    crime_arr = grid.crime.to_numpy()
+    #for i in crime_arr:
+        #print(i)
+
+    avg = np.percentile(crime_arr, threshold)
+
+
+
+    for i, grids in grid.iterrows():
+        if grids.crime > avg:
+            colors.append('yellow')
+        else:
+           colors.append('purple')
+    grid['color'] = gpd.GeoSeries(colors)
+    #print (grid.head(2999))
+    grid.plot(facecolor=grid.color)
+
+
+
+def optimized (grid):                                                                      #for debuggin i loaded crime per cell data into txt files which can be read and executed in ms
+    crimes = []                                                                                 #this is the longest part of the runtime
+    if gridsize == 0.002:
+        with open('0.002.txt') as f:
+            for line in f:
+                crimes.append(int(line))
+        grid['crime']=gpd.GeoSeries(crimes)
+        #print(grid.head(2000))
+    elif gridsize == 0.003:
+        with open('0.003.txt') as f:
+            for line in f:
+                crimes.append(int(line))
+        grid['crime'] = gpd.GeoSeries(crimes)
+        #print(grid.head(2000))
+    elif gridsize == 0.004:
+        with open('0.004.txt') as f:
+            for line in f:
+                crimes.append(int(line))
+        grid['crime'] = gpd.GeoSeries(crimes)
+        #print(grid.head(2000))
+    elif gridsize ==0.001:
+        with open('0.001.txt') as f:
+            for line in f:
+                crimes.append(int(line))
+        grid['crime'] = gpd.GeoSeries(crimes)
+        #print(grid.head(2000))
+    elif gridsize == 0.008:
+        with open('0.008.txt') as f:
+            for line in f:
+                crimes.append(int(line))
+        grid['crime'] = gpd.GeoSeries(crimes)
+        #print(grid.head(2000))
+    else:
+        number_of_crimes_per_grid(grid)
+
+    stats(grid)
+    grid.to_csv('0.002.csv')
+existing_coords = []
+
+def point_generator(grid):                                                                    #this funtion generates all the accessible and total points we can travel to
+    xmin, ymin, xmax, ymax = geo.total_bounds
+    remin = xmin
+    x = []
+    y = []
+    for i in range(int(math.floor(0.04/gridsize))):
+        if ymin < ymax- gridsize:
+            ymin = ymin + gridsize
+            xmin = remin
+            for j in range(int(math.floor(0.04/gridsize))):
+                if xmin < xmax - gridsize:
+                    xmin = xmin+gridsize
+                    x.append(xmin)
+                    y.append(ymin)
+
+    final_x= []
+    final_y= []
+    check = 0
+    index = 0
+    allx = []
+    ally = []
+    for j in range(len(y)):
+        allx.append(x[j])
+        ally.append(y[j])
+        all_points.append([allx[j], ally[j], colors[index], colors[index + 1], colors[index + math.ceil(0.04 / gridsize)],colors[index + math.ceil(0.04 / gridsize) + 1],0,0])
+        if check==(0.04/gridsize-1):
+            check = 0
+            index= index+1
+
+        if colors[index] == 'purple' or colors[index + 1] == 'purple' or colors[index + math.ceil(0.04 / gridsize) ] == 'purple' or colors[index + math.ceil(0.04 / gridsize) +1] == 'purple':
+           final_x.append(x[j])
+           final_y.append(y[j])
+           accessible_coords.append([x[j],y[j],colors[index],colors[index + 1],colors[index + math.ceil(0.04 / gridsize) ],colors[index + math.ceil(0.04 / gridsize) +1],0,0])
+           existing_coords.append([x[j],y[j]])
+        check = check + 1
+        index = index+1
+
+
+    print (len(y))
+    plot.scatter (final_x, final_y)
+    return final_x, final_y
+
+
+location_input = []
+
+
+def heurestic(x_coord, y_coord, xgoal, ygoal):                                      #the herustuc function whcih calculates the x/y distance between goal and current location
+    h = 0
+    xfinish = xgoal
+    yfinish = ygoal
+    if x_coord > xfinish:
+
+            l = abs (abs(x_coord)-abs(xgoal))/gridsize
+    else:
+
+        l =abs(abs(xgoal) - abs(x_coord))/gridsize
+
+            #print(str(xgoal))
+
+    if y_coord < yfinish:
+
+            h = abs(yfinish -y_coord)/gridsize
+
+            #print(str(ygoal))
+    else:
+
+            h = abs(y_coord - yfinish)/gridsize
+
+            #print(str(ygoal))
+    return l+h
+
+
+def cost(grid_color_1,grid_color_2):                                                                #cost fumction calibrated as per requested (with extra modifications to ensure proper results)
+    if grid_color_1 == "purple" and grid_color_2 == "purple":
+        return 1
+    elif grid_color_1== "yellow" and grid_color_2 == "purple":
+        return 1.3
+    elif grid_color_2== "yellow" and grid_color_1 == "purple":
+        return 1.3
+    else:
+        return 100000
+
+
+
+
+def AStar():                                                                  #implementation of the A* algorithm
+   x = []
+   y = []
+   index = math.ceil(0.04/gridsize)-1
+   all_points
+   accessible_coords
+   inputx = location_input[0][0]
+   inputy = location_input[0][1]
+   x_goal = location_input[1][0]
+   y_goal = location_input[1][1]
+   s_success = False
+
+
+
+   for i in all_points:                                                                #defines the goal states and prepare the grid
+        tempx = i[0]
+        tempy = i[1]
+
+        if (tempx==float(inputx) and tempy==float(inputy)) or (float(tempx)>=float(inputx) and float(tempy)>=float(inputy)):
+            inputx = tempx-gridsize
+            inputy = tempy
+            plot.plot(inputx, inputy, 'o', color='black')
+            break
+   for i in all_points:
+        tempx = i[0]
+        tempy = i[1]
+        if (tempx==x_goal and tempy==y_goal) or (tempx>=x_goal and tempy>=y_goal):
+            x_goal = tempx-gridsize
+            y_goal = tempy
+            plot.plot(x_goal, y_goal, 'o', color='black')
+            break
+   current = []
+
+   current_spot = 0
+   for i in all_points:
+        xdata = abs(inputx) - abs(i[0])
+        ydata=abs(inputy)-abs(i[1])
+        if abs(xdata)<0.001 and abs(ydata) <0.001:                                   #determines the start node (rounds it to a valid point)
+            current = i
+            break
+        current_spot = current_spot+1
+   current[6] =current_spot
+   print(str(current) +"   "+str(current_spot))
+   open_set.append(current)
+   x.append(current[0])
+   y.append(current[1])
+   right_path = []
+   print ("A* ALGORITHM START !")
+   while len(open_set)>0:                                     #this is where the A* algorithm starts
+       track = 0
+       for  element in open_set:
+           if(track==0):
+               current=element
+               track = track+1
+
+           if element[7]<=current[7]:
+               current = element
+
+
+
+
+
+       if index-1>0 and current[6]%(index)!=0 and  (all_points[current[6]-1] in accessible_coords):                           #the 8 if statements serve as a way to calculate possible potential paths
+           left = all_points[current[6]-1]                                                                                        #the heuristic valeus and costs are also calulateds in the statesments and the
+           left[6] = current[6]-1
+           left[7] = heurestic(left[0],left[1],x_goal,y_goal)+cost(current[2],current[4])                                               #path chosen is completely dependt on this part of the code
+           x.append(current[0])
+           y.append(current[1])                                                              #the reason for 8 if statements is because the maximum amount of points a node can visit is 8
+           if left not in closed_set and left[7]<100000:
+               plot.plot(x, y, 'red')                                                                     #of course there are exceptions such as color and end of grid but thoseexceptions are handled
+
+               open_set.append(left)
+       if len(all_points) > (current[6] + index) and  (all_points[current[6] + index] in accessible_coords):
+               top = all_points[current[6] + index]
+               top[6] = current[6] + index
+               top[7] = heurestic(top[0], top[1], x_goal, y_goal) + cost(current[4], current[5])
+               x.append(current[0])
+               y.append(current[1])
+
+               if top not in closed_set and top[7]<100000:
+                   plot.plot(x,y,'red')
+                   open_set.append(top)
+       if current[6]-index >0 and  (all_points[current[6]-index] in accessible_coords) :
+               bottom = all_points[current[6]-index]
+               bottom[6] = current[6]-index
+               bottom[7] = heurestic(bottom[0],bottom[1],x_goal,y_goal)+cost(current[2],current[3])
+               x.append(current[0])
+               y.append(current[1])
+               if bottom not in closed_set and bottom[7]<100000:
+                   plot.plot(x,y,'red')
+                   open_set.append(bottom)
+
+       if (current[6]+1)%index !=0 and current[6]+1<=len(all_points) and  (all_points[current[6]+1] in accessible_coords ):
+               right = all_points[current[6]+1]
+               right [6] = current[6]+1
+               right [7] = heurestic(right[0],right[1],x_goal,y_goal)+cost(current[3],current[5])
+               x.append(current[0])
+               y.append(current[1])
+               if right not in closed_set and right[7]<100000:
+                   plot.plot(x,y,'red')
+                   open_set.append(right)
+
+
+       if (current[6]+index -1 < len(all_points)) and  current[6]%(index)!=0 and (all_points[current[6]+index-1] in accessible_coords):
+                tl = all_points[current[6]+index-1]
+                tl[6] = current[6]+index-1
+                tl[7] = heurestic(tl[0],tl[1],x_goal,y_goal)+1.5
+                x.append(current[0])
+                y.append(current[1])
+                if tl not in closed_set and current[4]!='yellow':
+                    plot.plot (x,y,'red')
+                    open_set.append(tl)
+       if (current[6]+index+1)<len(all_points) and (current[6]+1)%index!=0 and (all_points[current[6]+index+1] in accessible_coords):
+                tr = all_points[current[6]+index+1]
+                tr[6] = current[6]+index+1
+                tr[7]= heurestic(tr[0],tr[1],x_goal,y_goal)+1.5
+                x.append(current[0])
+                y.append(current[1])
+                if tr not in closed_set and current[5]!='yellow':
+                    plot.plot(x,y,'red')
+                    open_set.append(tr)
+       if (current[6]-index-1)>=0 and current[6]%(index)!=0 and (all_points[current[6]-index-1 in accessible_coords]):
+            bl = all_points[current[6]-index-1]
+            bl[6] = current[6]-index-1
+            bl[7] = heurestic(bl[0],bl[1],x_goal,y_goal)+1.5
+            x.append(current[0])
+            y.append(current[1])
+            if bl not in closed_set and current[2]!='yellow':
+               plot.plot(x,y,'red')
+               open_set.append(bl)
+            if current[6] - index +1 > 0 and (current[6]+1)%index!=0 and all_points[current[6]-index-1] in accessible_coords:
+                br = all_points[current[6]-index+1]
+                br[6] = current[6]-index+1
+                br[7] = heurestic(br[0],br[1],x_goal,y_goal)+1.5
+                x.append(current[0])
+                y.append(current[1])
+                if br not in closed_set and current[3]!='yellow':
+                    plot.plot(x,y,'red')
+                    open_set.append(br)
+                elif br not in closed_set and current[3] =='yellow':
+                    closed_set.append()
+
+
+       if abs(current[0] - x_goal) < 0.000000001 and abs(current[1] - y_goal) < 0.00000001:
+           plot.plot(x_goal, y_goal, 'red')
+           s_success = True
+           print("ROUTE FOUND")
+           right_path=[]
+           temp = current
+           right_path.append(temp)
+           while temp.reverse():
+               plot.plot(temp[0],temp[1],'green')
+
+           break
+
+       closed_set.append(current)
+       open_set.remove(current)
+   if (s_success==False):
+       print("no possible path")
+
+
+
+
+
+
+def input_event():
+    xstart = float(input("Input x coordinate start"))                                           #input
+    ystart = float(input("Input y coordinate start"))
+    xfinish = float(input("Input x coordinate end"))
+    yfinish = float(input ("Input y coordinate end"))
+
+
+    #xstart = -73.5818307015
+    #ystart = 45.49806
+    #xfinish = -73.5818307015
+    #yfinish = 45.52206850850001
+    location_input.append([xstart,ystart])
+    location_input.append([xfinish,yfinish])
+    heurestic (xstart,ystart,xfinish,yfinish)            #to BE FIXXED
+
+
+    print("Input complete")
+
+def AI(grid):
+   point_generator(grid)
+   input_event()
+   AStar()
+
+
+
+
+
+
+
+
+
+
+def plotter(grid):
+
+    optimized(grid)               #this funtion is for reading txt files for grid sizes 0.001,0.002,0.003,0.004,0.008
+    #number_of_crimes_per_grid(grid)     #this function creates the firds and calls all the necessary funtions to execute the code
+    #stats(grid)
+    AI(grid)
+    ax = data_frame.plot(color='red')
+    grid.plot(facecolor='none', edgecolors='black', ax=ax)
+    draw()
+    plot.show()
+
+
+
+
+
+polygon_grid(data_frame)
