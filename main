@@ -12,7 +12,7 @@ import numpy as np
 from shapely.geometry import Polygon, Point
 import math
 from matplotlib.pyplot import draw
-
+import time
 
 accessible_coords = []
 data_frame = gpd.read_file('crime_dt.shp')
@@ -136,7 +136,7 @@ def optimized (grid):                                                           
         number_of_crimes_per_grid(grid)
 
     stats(grid)
-    grid.to_csv('0.002.csv')
+    grid.to_csv('0.002u.csv')
 existing_coords = []
 
 def point_generator(grid):                                                                    #this funtion generates all the accessible and total points we can travel to
@@ -255,6 +255,7 @@ def AStar():                                                                  #i
             y_goal = tempy
             plot.plot(x_goal, y_goal, 'o', color='black')
             break
+
    current = []
 
    current_spot = 0
@@ -272,6 +273,7 @@ def AStar():                                                                  #i
    y.append(current[1])
    right_path = []
    print ("A* ALGORITHM START !")
+   tic = time.perf_counter()
    while len(open_set)>0:                                     #this is where the A* algorithm starts
        track = 0
        for  element in open_set:
@@ -381,6 +383,8 @@ def AStar():                                                                  #i
 
        closed_set.append(current)
        open_set.remove(current)
+   toc = time.perf_counter()
+   print(f"A* search completed in {toc - tic:0.4f} seconds")
    if (s_success==False):
        print("no possible path")
 
@@ -390,10 +394,20 @@ def AStar():                                                                  #i
 
 
 def input_event():
-    xstart = float(input("Input x coordinate start"))                                           #input
-    ystart = float(input("Input y coordinate start"))
-    xfinish = float(input("Input x coordinate end"))
-    yfinish = float(input ("Input y coordinate end"))
+
+    start = input("Input start coordinates: ")
+    end = input("Input end coordinates")
+    xstarts, ystart = start.split(' ',1)
+    xfinish,yfinish = end.split(' ',1)
+    xstart = float(xstarts)
+    ystart = float(ystart)
+    xfinish = float(xfinish)
+    yfinish = float(yfinish)
+    #xstart = float(input("Input x coordinate start"))                                           #input
+    #ystart = float(input("Input y coordinate start"))
+    #xfinish = float(input("Input x coordinate end"))
+    #yfinish = float(input ("Input y coordinate end"))
+
 
 
     #xstart = -73.5818307015

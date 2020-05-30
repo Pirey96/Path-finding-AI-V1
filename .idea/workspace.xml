@@ -11,23 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e7b514d-fe19-4262-837d-0d97e54df4cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/COMP472a1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0.002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0.002.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0.003.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0.004.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crime_dt.cpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crime_dt.dbf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crime_dt.prj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crime_dt.shp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crime_dt.shx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grid.shp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0.002.csv" beforeDir="false" afterPath="$PROJECT_DIR$/0.002.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main" beforeDir="false" afterPath="$PROJECT_DIR$/main" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,26 +109,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1211" y="325" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1590251980824" />
+    <state x="93" y="100" width="775" height="847" key="DiffContextDialog" timestamp="1590844883564">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="93" y="100" width="775" height="847" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590844883564" />
     <state x="1241" y="278" key="EnvironmentVariablesDialog" timestamp="1589510255150">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1241" y="278" key="EnvironmentVariablesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589510255150" />
-    <state width="1899" height="160" key="GridCell.Tab.0.bottom" timestamp="1590838853864">
+    <state width="1899" height="268" key="GridCell.Tab.0.bottom" timestamp="1590845103939">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="160" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590838853864" />
-    <state width="1899" height="160" key="GridCell.Tab.0.center" timestamp="1590838853864">
+    <state width="1899" height="268" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590845103939" />
+    <state width="1899" height="268" key="GridCell.Tab.0.center" timestamp="1590845103939">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="160" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590838853864" />
-    <state width="1899" height="160" key="GridCell.Tab.0.left" timestamp="1590838853864">
+    <state width="1899" height="268" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590845103939" />
+    <state width="1899" height="268" key="GridCell.Tab.0.left" timestamp="1590845103939">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="160" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590838853864" />
-    <state width="1899" height="160" key="GridCell.Tab.0.right" timestamp="1590838853864">
+    <state width="1899" height="268" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590845103939" />
+    <state width="1899" height="268" key="GridCell.Tab.0.right" timestamp="1590845103939">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="160" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590838853864" />
+    <state width="1899" height="268" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590845103939" />
     <state width="962" height="216" key="GridCell.Tab.1.bottom" timestamp="1590723826914">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
